@@ -27,13 +27,12 @@ app.use(require('./middleware/header'))  //this has to be done after body parser
 //     res.send("I am old enough to know better but don't.  I am originally from Buffalo, New York")
 // })
 
-
 app.use('/api/user', user )
 app.use('/api/login',login )
 
 //create route-- anything after middleware requires a token
 app.use(require('./middleware/validate-session'))
-app.use('/api/logcontroller',log)
+app.use('/logcontroller',log)
 app.use('/test-controller', test)
 app.use('/authtest',authTest)
 

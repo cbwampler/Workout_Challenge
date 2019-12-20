@@ -52,7 +52,6 @@ router.get('/getall', function(req,res){
  * get a log item by id
 ***********************/
 
-
 router.get("/:id", function(req,res){
     var primarykey = req.params.id;
     var userid = req.user.id
@@ -64,6 +63,26 @@ router.get("/:id", function(req,res){
     ).then(
         data => {return data ?res.json(data) : res.send("not authorized to view this record")
         }), (err=>res.send(500,err.message))
+});
+
+/**********************
+ * update an item for a user
+***********************/
+
+router.put("/update/:id", function(req, res) {
+    var userid = req.user.id;
+    var primaryKey = req.params.id;
+    var logdata = req.body.log.description
+    
+    Log.update({
+        log: logdata
+    },
+    {where: {id: primaryKey, owner: userid}
+}).then(
+        data =>{
+            return res.json(data)
+        }
+), err => res.send(500,err.message);
 });
 
 /**********************
@@ -86,28 +105,5 @@ router.delete('/delete/:id', function (req,res){
         }
     );
 });
-
-/**********************
- * update an item for a user
-***********************/
-
-router.put('/update/:id', function(req, res) {
-    var data = req.params.id;
-    var Log = req.body.log.description
-
-    Log.update({
-        log: Log
-    },
-    {where: {id: data}
-}).then(
-        function updateSuccess(updatedLog) {
-            res.json({
-                log: updateLog});
-            },
-        function updateError(err){
-            res.send(500, err.message);
-        }
-    )
-})
 
 module.exports = router;
